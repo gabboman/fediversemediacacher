@@ -8,6 +8,7 @@ Technologies used:
 
 Starting the project:
 ```
+CREATE A FOLDER CALLED CACHE. Feel free to clean it every once in a while :D
 npm start
 ```
 
