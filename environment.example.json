@@ -1,0 +1,4 @@
+{
+    "port": 3002,
+    "validFormats": ["jpg", "jpeg", "png", "webp", "mp4", "gif", "webm"]
+}
