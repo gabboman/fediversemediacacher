@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors'
 const fs = require('fs')
-const https = require('https');
+const { http, https } = require('follow-redirects');
 
 const environment = require('./environment')
 const crypto = require('crypto');

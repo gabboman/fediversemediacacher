@@ -12,6 +12,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.18.2",
+    "follow-redirects": "^1.15.2",
     "fs": "^0.0.1-security",
     "ts-node": "^10.9.1"
   },
