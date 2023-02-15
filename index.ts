@@ -18,7 +18,7 @@ app.get('/', async (req: Request, res: Response) =>{
             const mediaLink: string = req.query.media as string
             const mediaLinkArray = mediaLink.split('.')
             const linkExtension = mediaLinkArray[mediaLinkArray.length -1].toLowerCase()
-            if(validExtensions.indexOf(linkExtension) !== -1) {
+            if(validExtensions.indexOf(linkExtension) !== -1 || true) { // calckey images have no extension
                 const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
                 const localFileName = `cache/${mediaLinkHash}.${linkExtension}`
                 if (fs.existsSync(localFileName)) {
