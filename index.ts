@@ -17,10 +17,13 @@ app.get('/', async (req: Request, res: Response) =>{
         if(req.query && req.query.media) {
             const mediaLink: string = req.query.media as string
             const mediaLinkArray = mediaLink.split('.')
-            const linkExtension = mediaLinkArray[mediaLinkArray.length -1].toLowerCase()
-            if(validExtensions.indexOf(linkExtension) !== -1 || true) { // calckey images have no extension
+            let linkExtension = mediaLinkArray[mediaLinkArray.length -1].toLowerCase()
+            // calckey images have no extension
+                if(validExtensions.indexOf(linkExtension) == -1 ){
+                    linkExtension = ''
+                }
                 const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
-                const localFileName = `cache/${mediaLinkHash}.${linkExtension}`
+                const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}`: `cache/${mediaLinkHash}`
                 if (fs.existsSync(localFileName)) {
                     // We have the image! we just serve it
                     res.sendFile(localFileName, { root: '.' })
@@ -47,10 +50,7 @@ app.get('/', async (req: Request, res: Response) =>{
                     
                   }
 
-            } else {
-                // format not valid
-                res.sendStatus(404)
-            }
+
 
 
 
