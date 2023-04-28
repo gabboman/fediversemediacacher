@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors'
+import axios from 'axios';
 const fs = require('fs')
 const { http, https } = require('follow-redirects');
 
@@ -14,12 +15,12 @@ app.use(cors())
 
 
 app.get('/', async (req: Request, res: Response) =>{
-        if(req.query && req.query.media) {
+        if(req.query?.media) {
             const mediaLink: string = req.query.media as string
             const mediaLinkArray = mediaLink.split('.')
             let linkExtension = mediaLinkArray[mediaLinkArray.length -1].toLowerCase()
             // calckey images have no extension
-                if(validExtensions.indexOf(linkExtension) == -1 ){
+                if(validExtensions.indexOf(linkExtension) === -1 ){
                     linkExtension = ''
                 }
                 const mediaLinkHash = crypto.createHash('sha256').update(mediaLink).digest('hex')
@@ -30,31 +31,19 @@ app.get('/', async (req: Request, res: Response) =>{
                   } else {
                     // its downloading time!
                     try {
-                        https.get(mediaLink,(httpResponse: any) => {
-                            // Image will be stored at this path
-                            if(httpResponse.statusCode == 200) {
-                            const path = `${__dirname}/${localFileName}`;
-                            const filePath = fs.createWriteStream(path);
-                            httpResponse.pipe(filePath);
-                            filePath.on('finish',() => {
+                        const remoteResponse = await axios.get(mediaLink, {responseType: 'stream'})
+                        const path = `${__dirname}/${localFileName}`;
+                        const filePath = fs.createWriteStream(path);
+                        filePath.on('finish',() => {
                             filePath.close();
                             res.sendFile(localFileName, { root: '.' })
-                        })
-                            } else {
-                                res.sendStatus(404)
-                            }
-                        })
+                            })
+                        remoteResponse.data.pipe(filePath);
                     } catch (error) {
+                        console.log(error)
                         res.sendStatus(404)
                     }
-                    
                   }
-
-
-
-
-
-
         } else {
             res.sendStatus(404)
         }
