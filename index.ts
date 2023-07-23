@@ -16,10 +16,11 @@ app.use(cors())
 
 app.get('/', async (req: Request, res: Response) =>{
         if(req.query?.media) {
-            const mediaLink: string = req.query.media as string
-            const mediaLinkArray = mediaLink.split('.')
-            let linkExtension = mediaLinkArray[mediaLinkArray.length -1].toLowerCase()
-            // calckey images have no extension
+            try {
+                const mediaLink: string = req.query.media as string
+                const mediaLinkArray = mediaLink.split('.')
+                let linkExtension = mediaLinkArray[mediaLinkArray.length -1].toLowerCase()
+                // calckey images have no extension
                 if(validExtensions.indexOf(linkExtension) === -1 ){
                     linkExtension = ''
                 }
@@ -44,6 +45,12 @@ app.get('/', async (req: Request, res: Response) =>{
                         res.sendStatus(404)
                     }
                   }
+
+            }catch (error) {
+                res.sendStatus(500);
+                res.send();
+                console.log(error)
+            }
         } else {
             res.sendStatus(404)
         }
