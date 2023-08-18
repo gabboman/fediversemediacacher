@@ -28,6 +28,7 @@ app.get('/', async (req: Request, res: Response) =>{
                 const localFileName = linkExtension ? `cache/${mediaLinkHash}.${linkExtension}`: `cache/${mediaLinkHash}`
                 if (fs.existsSync(localFileName)) {
                     // We have the image! we just serve it
+                    res.set('Cache-control', 'public, max-age=36000')
                     res.sendFile(localFileName, { root: '.' })
                   } else {
                     // its downloading time!
@@ -37,6 +38,7 @@ app.get('/', async (req: Request, res: Response) =>{
                         const filePath = fs.createWriteStream(path);
                         filePath.on('finish',() => {
                             filePath.close();
+                            res.set('Cache-control', 'public, max-age=36000')
                             res.sendFile(localFileName, { root: '.' })
                             })
                         remoteResponse.data.pipe(filePath);
