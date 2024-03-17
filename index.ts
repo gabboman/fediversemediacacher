@@ -52,7 +52,11 @@ app.get("/", async (req: Request, res: Response) => {
           remoteResponse.data.pipe(filePath);
         } catch (error) {
           console.log(error);
-          res.sendStatus(404);
+          if (environment.redirects) {
+            res.redirect(mediaLink);
+          } else {
+            res.sendStatus(404);
+          }
         }
       }
     } catch (error) {
